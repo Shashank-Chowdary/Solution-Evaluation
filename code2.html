@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Suitability — Executive Decision Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #86868b;
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+
+        .left-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .right-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1d1d1f;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #424245;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #007aff;
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+        }
+
+        .risk-factors {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .factor-group {
+            background: #f9f9fb;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e5e5ea;
+        }
+
+        .factor-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1d1d1f;
+        }
+
+        .factor-subtitle {
+            font-size: 12px;
+            color: #86868b;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .risk-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .risk-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 6px;
+            background: white;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .risk-btn:hover {
+            background: #f5f5f7;
+        }
+
+        .risk-btn.active {
+            color: white;
+            border-color: transparent;
+        }
+
+        .risk-btn.low.active {
+            background: #34c759;
+        }
+
+        .risk-btn.moderate.active {
+            background: #ff9500;
+        }
+
+        .risk-btn.high.active {
+            background: #ff3b30;
+        }
+
+        .framework-section h3 {
+            color: #1d1d1f;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .framework-content {
+            font-size: 14px;
+            color: #424245;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .alternatives h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .alternatives ul {
+            list-style: none;
+        }
+
+        .alternatives li {
+            font-size: 13px;
+            color: #424245;
+            margin-bottom: 12px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .alternatives li:before {
+            content: "•";
+            color: #007aff;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .mitigations h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .mitigations ul {
+            list-style: none;
+        }
+
+        .mitigations li {
+            font-size: 13px;
+            color: #424245;
+            margin-bottom: 12px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .mitigations li:before {
+            content: "•";
+            color: #ff9500;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .decision-output {
+            background: #f9f9fb;
+            border: 2px solid #e5e5ea;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .decision-placeholder {
+            color: #86868b;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .decision-result {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .decision-eligible {
+            background: #f0fff0;
+            border-color: #34c759;
+            color: #1d6f32;
+        }
+
+        .decision-cautious {
+            background: #fff8f0;
+            border-color: #ff9500;
+            color: #b8630a;
+        }
+
+        .decision-not-suitable {
+            background: #fff0f0;
+            border-color: #ff3b30;
+            color: #d12b20;
+        }
+
+        .decision-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .decision-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .decision-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 12px;
+        }
+
+        .awaiting-input {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .awaiting-input h4 {
+            color: #007aff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .awaiting-input p {
+            color: #424245;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #007aff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056cc;
+        }
+
+        .btn-secondary {
+            background: #f5f5f7;
+            color: #424245;
+            border: 1px solid #d2d2d7;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e5ea;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .confidence-score {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .confidence-score h4 {
+            color: #007aff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .confidence-score p {
+            color: #424245;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .risk-factors {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Agentic AI Suitability — Executive Decision Tool</h1>
+            <p>AI-powered assessment tool that provides intelligent recommendations based on your specific use case context and risk factors.</p>
+        </div>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="section">
+                    <h3>Use case name</h3>
+                    <div class="form-group">
+                        <select id="usecase">
+                            <option value="">Select use case</option>
+                            <option value="production-monitoring">Production line monitoring</option>
+                            <option value="customer-service">Customer service automation</option>
+                            <option value="financial-analysis">Financial analysis</option>
+                            <option value="content-moderation">Content moderation</option>
+                            <option value="supply-chain">Supply chain management</option>
+                            <option value="hr-screening">HR candidate screening</option>
+                            <option value="legal-research">Legal research</option>
+                            <option value="medical-diagnosis">Hospital Front Desk Assistant</option>
+                            <option value="custom">Custom use case</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label>Preset / Manual Risk Rating</label>
+                        <select id="riskPreset">
+                            <option value="manual">Rate the risk level for each factor</option>
+                            <option value="low-risk">Low Risk Preset</option>
+                            <option value="medium-risk">Medium Risk Preset</option>
+                            <option value="high-risk">High Risk Preset</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label>Anticipated Autonomy Level</label>
+                        <select id="autonomyLevel">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium — Human-on-the-loop</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label>Is this mission-critical, customer-facing, or regulatory-sensitive?</label>
+                        <select id="criticality">
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label>Use case description (optional)</label>
+                        <textarea id="description" placeholder="Brief description, stakeholders, and expected outcomes"></textarea>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>Rate the risk level for each factor</h3>
+                    <div class="risk-factors">
+                        <div class="factor-group" data-factor="costs">
+                            <div class="factor-title">Costs</div>
+                            <div class="factor-subtitle">Consider API, compute, integration, and ongoing retraining costs.</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'costs')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'costs')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'costs')">High</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="human-impact">
+                            <div class="factor-title">Human Impact</div>
+                            <div class="factor-subtitle">Does the task require empathy, negotiation, or trust-building?</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'human-impact')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'human-impact')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'human-impact')">High</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="realtime">
+                            <div class="factor-title">Real-time Requirements</div>
+                            <div class="factor-subtitle">Are millisecond-level decisions or deterministic latency required?</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'realtime')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'realtime')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'realtime')">High</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="transparency">
+                            <div class="factor-title">Transparency / Auditability</div>
+                            <div class="factor-subtitle">Is an auditable explanation required for decisions?</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'transparency')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'transparency')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'transparency')">High</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="integration">
+                            <div class="factor-title">Integration Complexity</div>
+                            <div class="factor-subtitle">How many legacy systems, silos, or custom interfaces are required?</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'integration')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'integration')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'integration')">High</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="data">
+                            <div class="factor-title">Data Sensitivity</div>
+                            <div class="factor-subtitle">Is data fresh, complete, unbiased and validated?</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'data')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'data')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'data')">High</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="governance">
+                            <div class="factor-title">Governance Requirements</div>
+                            <div class="factor-subtitle">Are policies, monitoring, and escalation paths defined?</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'governance')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'governance')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'governance')">High</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="security">
+                            <div class="factor-title">Security Implications</div>
+                            <div class="factor-subtitle">Could misuse enable unauthorized actions or data exposure?</div>
+                            <div class="risk-buttons">
+                                <button class="risk-btn low" onclick="selectRisk(this, 'security')">Low</button>
+                                <button class="risk-btn moderate" onclick="selectRisk(this, 'security')">Moderate</button>
+                                <button class="risk-btn high" onclick="selectRisk(this, 'security')">High</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="awaitingInput" class="awaiting-input">
+                    <h4>Awaiting Input</h4>
+                    <p>Rate the factors to get an AI-powered assessment.</p>
+                </div>
+
+                <div class="section">
+                    <h3>Evaluation Results</h3>
+                    <div id="decisionOutput" class="decision-output">
+                        <div class="decision-placeholder">
+                            Complete all factor ratings and click Submit to see the AI-powered recommendation
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <!-- <h3>Recommended next steps</h3> -->
+                    <div class="action-buttons">
+                        <button id="submitBtn" class="btn btn-primary" onclick="submitAssessment()">Get Evaluation</button>
+                        <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="framework-section">
+                    <h3>AI-Enhanced Framework</h3>
+                    <div class="framework-content">
+                        This tool now uses Google's Gemini AI to provide intelligent, context-aware assessments. Instead of simple rule-based decisions, the AI considers the complex interactions between factors, your specific use case, and industry best practices to deliver nuanced recommendations.
+                    </div>
+
+                    <div class="alternatives">
+                        <h4>Alternatives</h4>
+                        <ul>
+                            <li>Use a rules-based automation system for routine tasks and only involve a human in complex tasks.</li>
+                            <li>Use Agentic AI only as a support tool while a human leads the conversation.</li>
+                            <li>Start with supervised automation before attempting multi-system autonomy.</li>
+                            <li>Create human-led approval workflows for outbound communications and have governance frameworks are in place.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mitigations">
+                        <h4>Mitigations</h4>
+                        <ul>
+                            <li>Implement cost-governance controls — limit API calls, use budget caps.</li>
+                            <li>Set boundaries where Agentic AI escalates to a human for emotionally charged or sensitive topics.</li>
+                            <li>For mission-critical systems — store reasoning steps.</li>
+                            <li>Implement agent policy enforcement.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GEMINI_API_KEY = 'AIzaSyD7zCT8ZAjh_ZdEkO48nzk-T6NDKLNbWcY';
+        const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+
+        function selectRisk(button, category) {
+            // Remove active class from all buttons in this category
+            const categoryButtons = button.parentElement.querySelectorAll('.risk-btn');
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Update awaiting input status
+            updateAwaitingInput();
+        }
+
+        function updateAwaitingInput() {
+            const factors = {
+                costs: getSelectedRisk('costs'),
+                humanImpact: getSelectedRisk('human-impact'),
+                realtime: getSelectedRisk('realtime'),
+                transparency: getSelectedRisk('transparency'),
+                integration: getSelectedRisk('integration'),
+                data: getSelectedRisk('data'),
+                governance: getSelectedRisk('governance'),
+                security: getSelectedRisk('security')
+            };
+
+            const unratedCount = Object.values(factors).filter(v => v === null).length;
+            const awaitingDiv = document.getElementById('awaitingInput');
+            
+            if (unratedCount === 0) {
+                awaitingDiv.innerHTML = `
+                    <h4 style="color: #34c759;">Ready for Assessment</h4>
+                    <p>All factors rated. Click "Get AI Assessment" for intelligent analysis.</p>
+                `;
+                awaitingDiv.style.background = '#f0fff0';
+                awaitingDiv.style.borderColor = '#34c759';
+            } else {
+                awaitingDiv.innerHTML = `
+                    <h4>Awaiting Input</h4>
+                    <p>${unratedCount} factor${unratedCount > 1 ? 's' : ''} remaining to rate for Evaluation.</p>
+                `;
+                awaitingDiv.style.background = '#f0f8ff';
+                awaitingDiv.style.borderColor = '#b3d9ff';
+            }
+        }
+
+        async function callGeminiAPI(prompt) {
+            try {
+                const response = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }],
+                        generationConfig: {
+                            temperature: 0.3,
+                            topK: 40,
+                            topP: 0.95,
+                            maxOutputTokens: 1024,
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error('Gemini API Error:', error);
+                throw error;
+            }
+        }
+
+        function createAssessmentPrompt() {
+            const factors = {
+                costs: getSelectedRisk('costs'),
+                humanImpact: getSelectedRisk('human-impact'),
+                realtime: getSelectedRisk('realtime'),
+                transparency: getSelectedRisk('transparency'),
+                integration: getSelectedRisk('integration'),
+                data: getSelectedRisk('data'),
+                governance: getSelectedRisk('governance'),
+                security: getSelectedRisk('security')
+            };
+
+            const useCase = document.getElementById('usecase').value || 'Custom use case';
+            const autonomyLevel = document.getElementById('autonomyLevel').value;
+            const isCritical = document.getElementById('criticality').value === 'yes';
+            const description = document.getElementById('description').value;
+
+            return `
+You are an expert AI consultant assessing whether agentic AI is suitable for a specific use case. 
+
+**Use Case**: ${useCase}
+**Description**: ${description || 'Not provided'}
+**Autonomy Level**: ${autonomyLevel}
+**Mission Critical**: ${isCritical ? 'Yes' : 'No'}
+
+**Risk Factor Ratings**:
+- Costs: ${factors.costs || 'Not rated'}
+- Human Impact: ${factors.humanImpact || 'Not rated'}
+- Real-time Requirements: ${factors.realtime || 'Not rated'}
+- Transparency/Auditability: ${factors.transparency || 'Not rated'}
+- Integration Complexity: ${factors.integration || 'Not rated'}
+- Data Sensitivity: ${factors.data || 'Not rated'}
+- Governance Requirements: ${factors.governance || 'Not rated'}
+- Security Implications: ${factors.security || 'Not rated'}
+
+Based on this information, provide an intelligent assessment that considers:
+1. The relative importance of different risk factors for this specific use case
+2. How factors interact with each other
+3. Industry best practices and real-world considerations
+4. The specific context provided
+
+Return your response in this exact JSON format:
+{
+  "decision": "suitable" | "cautious" | "not_suitable",
+  "confidence": 85,
+  "title": "Brief decision title",
+  "subtitle": "Short explanation",
+  "reasoning": "Detailed explanation of your reasoning, considering factor interactions and use case context",
+  "keyRecommendations": ["recommendation 1", "recommendation 2", "recommendation 3"]
+}
+
+The decision should be:
+- "suitable": Low overall risk, good fit for agentic AI
+- "cautious": Moderate risk, suitable with proper safeguards
+- "not_suitable": High risk, recommend alternatives
+
+Consider that not all high-risk factors are equally important for every use case. For example, high transparency requirements might be critical for medical diagnosis but less important for production monitoring.
+            `.trim();
+        }
+
+        async function submitAssessment() {
+            const factors = {
+                costs: getSelectedRisk('costs'),
+                humanImpact: getSelectedRisk('human-impact'),
+                realtime: getSelectedRisk('realtime'),
+                transparency: getSelectedRisk('transparency'),
+                integration: getSelectedRisk('integration'),
+                data: getSelectedRisk('data'),
+                governance: getSelectedRisk('governance'),
+                security: getSelectedRisk('security')
+            };
+
+            // Check if all factors are rated
+            const unratedCount = Object.values(factors).filter(v => v === null).length;
+            if (unratedCount > 0) {
+                alert(`Please rate all factors before submitting. ${unratedCount} factor${unratedCount > 1 ? 's' : ''} still need${unratedCount === 1 ? 's' : ''} to be rated.`);
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span>Analyzing...';
+
+            try {
+                const prompt = createAssessmentPrompt();
+                const response = await callGeminiAPI(prompt);
+                
+                // Parse the JSON response
+                const jsonMatch = response.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    throw new Error('Invalid response format from AI');
+                }
+                
+                const assessment = JSON.parse(jsonMatch[0]);
+                updateDecisionOutputDisplay(assessment);
+                
+            } catch (error) {
+                console.error('Assessment error:', error);
+                const outputDiv = document.getElementById('decisionOutput');
+                outputDiv.innerHTML = `
+                    <div class="decision-placeholder">
+                        <span style="color: #ff3b30;">⚠️ Assessment Error</span><br>
+                        Failed to get AI assessment. Please try again or check your connection.
+                    </div>
+                `;
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+
+        function updateDecisionOutputDisplay(assessment) {
+            const outputDiv = document.getElementById('decisionOutput');
+            
+            const icons = {
+                suitable: '✅',
+                cautious: '⚠️',
+                not_suitable: '❌'
+            };
+
+            const cssClasses = {
+                suitable: 'decision-eligible',
+                cautious: 'decision-cautious',
+                not_suitable: 'decision-not-suitable'
+            };
+
+            const recommendationsHtml = assessment.keyRecommendations ? 
+                `<div style="margin-top: 15px; font-size: 12px; text-align: left;">
+                    <strong>Key Recommendations:</strong>
+                    <ul style="margin: 5px 0 0 20px; list-style: disc;">
+                        ${assessment.keyRecommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                 </div>` : '';
+
+            outputDiv.innerHTML = `
+                <div class="decision-result">
+                    <span class="decision-icon">${icons[assessment.decision]}</span>
+                    <div class="decision-title">${assessment.title}</div>
+                    <div class="decision-subtitle">${assessment.subtitle}</div>
+                    <div class="confidence-score">
+                        <h4>AI Confidence Score</h4>
+                        <p>${assessment.confidence}% confident in this assessment</p>
+                    </div>
+                    <div style="font-size: 13px; line-height: 1.4; text-align: left;">
+                        ${assessment.reasoning}
+                    </div>
+                    ${recommendationsHtml}
+                </div>
+            `;
+            
+            outputDiv.className = `decision-output ${cssClasses[assessment.decision]}`;
+        }
+
+        function getSelectedRisk(category) {
+            const factorGroup = document.querySelector(`[data-factor="${category}"]`);
+            if (!factorGroup) return null;
+            
+            const activeButton = factorGroup.querySelector('.risk-btn.active');
+            if (activeButton) {
+                if (activeButton.classList.contains('low')) return 'low';
+                if (activeButton.classList.contains('moderate')) return 'moderate';
+                if (activeButton.classList.contains('high')) return 'high';
+            }
+            return null;
+        }
+
+        function resetForm() {
+            // Reset all selections
+            document.getElementById('usecase').value = '';
+            document.getElementById('riskPreset').value = 'manual';
+            document.getElementById('autonomyLevel').value = 'medium';
+            document.getElementById('criticality').value = 'yes';
+            document.getElementById('description').value = '';
+            
+            // Reset all risk buttons
+            document.querySelectorAll('.risk-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Reset decision output
+            const outputDiv = document.getElementById('decisionOutput');
+            outputDiv.innerHTML = '<div class="decision-placeholder">Complete all factor ratings and click Submit to see the AI-powered recommendation</div>';
+            outputDiv.className = 'decision-output';
+            
+            // Reset awaiting input
+            updateAwaitingInput();
+        }
+
+        // Add preset functionality
+        document.getElementById('riskPreset').addEventListener('change', function() {
+            const preset = this.value;
+            const presets = {
+                'low-risk': {
+                    costs: 'low',
+                    'human-impact': 'low',
+                    realtime: 'low',
+                    transparency: 'low',
+                    integration: 'low',
+                    data: 'low',
+                    governance: 'low',
+                    security: 'low'
+                },
+                'medium-risk': {
+                    costs: 'moderate',
+                    'human-impact': 'moderate',
+                    realtime: 'low',
+                    transparency: 'moderate',
+                    integration: 'moderate',
+                    data: 'moderate',
+                    governance: 'low',
+                    security: 'moderate'
+                },
+                'high-risk': {
+                    costs: 'high',
+                    'human-impact': 'high',
+                    realtime: 'high',
+                    transparency: 'high',
+                    integration: 'high',
+                    data: 'high',
+                    governance: 'high',
+                    security: 'high'
+                }
+            };
+
+            if (presets[preset]) {
+                // Reset all buttons first
+                document.querySelectorAll('.risk-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Apply preset
+                Object.entries(presets[preset]).forEach(([factor, level]) => {
+                    const factorGroup = document.querySelector(`[data-factor="${factor}"]`);
+                    if (factorGroup) {
+                        const button = factorGroup.querySelector(`.risk-btn.${level}`);
+                        if (button) {
+                            button.classList.add('active');
+                        }
+                    }
+                });
+
+                updateAwaitingInput();
+            }
+        });
+
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAwaitingInput();
+        });
+    </script>
+</body>
+</html>
