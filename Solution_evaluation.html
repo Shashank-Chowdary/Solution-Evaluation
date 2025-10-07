@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Framework -  Agentic AI Use Case Evaluation</title>
+
+    <!-- PDF.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+</script>
+
+<!-- Mammoth.js for DOCX -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -83,6 +93,40 @@
             margin-bottom: 8px;
             color: #424245;
         }
+
+        .input-method-tab {
+    flex: 1;
+    padding: 10px 20px;
+    border: 1px solid #d2d2d7;
+    border-radius: 6px;
+    background: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #424245;
+}
+
+.input-method-tab:hover {
+    background: #f5f5f7;
+    border-color: #007aff;
+}
+
+.input-method-tab.active {
+    background: #007aff;
+    color: white;
+    border-color: #007aff;
+}
+
+#dropZone:hover {
+    border-color: #007aff !important;
+    background: #f0f8ff !important;
+}
+
+#dropZone.dragging {
+    border-color: #007aff !important;
+    background: #e3f2ff !important;
+}
 
         .required {
             color: #ff3b30;
@@ -588,12 +632,54 @@
                         <label for="usecaseName">Use Case Name</label>
                         <input type="text" id="usecaseName" placeholder="Enter your use case name">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="description">Use Case Description <span class="required">*</span></label>
                         <textarea id="description" placeholder="Detailed description of the use case, stakeholders involved, and expected outcomes" required></textarea>
                         <div id="descriptionError" class="error-message" style="display: none;">Description is required</div>
                     </div>
-                </div>
+                </div> -->
+
+
+                <div class="form-group">
+    <label for="description">Use Case Description <span class="required">*</span></label>
+    
+    <!-- Tab-like selector -->
+    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <button type="button" id="textInputTab" class="input-method-tab active" onclick="switchInputMethod('text')">
+            Type Description
+        </button>
+        <button type="button" id="fileUploadTab" class="input-method-tab" onclick="switchInputMethod('file')">
+            Upload File
+        </button>
+    </div>
+    
+    <!-- Text Input -->
+    <div id="textInputSection">
+        <textarea id="description" placeholder="Detailed description of the use case, stakeholders involved, and expected outcomes" required></textarea>
+    </div>
+    
+    <!-- File Upload -->
+    <div id="fileUploadSection" style="display: none;">
+        <div style="border: 2px dashed #d2d2d7; border-radius: 8px; padding: 20px; text-align: center; background: #fafafa; cursor: pointer; transition: all 0.3s;" 
+             id="dropZone"
+             onclick="document.getElementById('fileInput').click()">
+            <div style="font-size: 32px; margin-bottom: 10px;">📄</div>
+            <div style="font-size: 14px; color: #424245; margin-bottom: 5px;">
+                <strong>Click to upload</strong> or drag and drop
+            </div>
+            <div style="font-size: 12px; color: #86868b;">
+                Supports: TXT, PDF, DOCX (Max 5MB)
+            </div>
+            <input type="file" id="fileInput" accept=".txt,.pdf,.docx,.doc" style="display: none;" onchange="handleFileUpload(event)">
+        </div>
+        <div id="fileInfo" style="display: none; margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 6px; font-size: 13px;">
+            <strong>Uploaded:</strong> <span id="fileName"></span>
+            <button type="button" onclick="clearFile()" style="float: right; background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 12px;">✕ Remove</button>
+        </div>
+    </div>
+    
+    <div id="descriptionError" class="error-message" style="display: none;">Description is required</div>
+</div>
 
                 <div class="section">
                     <div class="form-group">
@@ -871,15 +957,168 @@
     <script>
         
         // const GEMINI_API_KEY = 'AIzaSyD7zCT8ZAjh_ZdEkO48nzk-T6NDKLNbWcY';
-        // const GEMINI_API_KEY = 'AIzaSyAmT4KDfkmBunEB98q8dv5xS2mf8BJDt9g';
+        const GEMINI_API_KEY = 'AIzaSyAmT4KDfkmBunEB98q8dv5xS2mf8BJDt9g';
 
-        const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
+        // const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
         const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
         // Store factor scores
         let factorScores = {};
         let lastAssessmentMethod = 'manual';
         let presetFactorScores = {};
+
+        // Input method switching
+function switchInputMethod(method) {
+    const textTab = document.getElementById('textInputTab');
+    const fileTab = document.getElementById('fileUploadTab');
+    const textSection = document.getElementById('textInputSection');
+    const fileSection = document.getElementById('fileUploadSection');
+    
+    if (method === 'text') {
+        textTab.classList.add('active');
+        fileTab.classList.remove('active');
+        textSection.style.display = 'block';
+        fileSection.style.display = 'none';
+        
+        // Clear file if switching back to text
+        // clearFile();
+    } else {
+        textTab.classList.remove('active');
+        fileTab.classList.add('active');
+        textSection.style.display = 'none';
+        fileSection.style.display = 'block';
+    }
+}
+
+// File upload handler
+async function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Add file type validation
+    const allowedTypes = ['text/plain', 'application/pdf', 
+                         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    
+    if (!allowedTypes.includes(file.type)) 
+    {
+        alert('Invalid file type. Please upload TXT, PDF, or DOCX files.');
+        clearFile();
+        return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+    }
+    
+    const fileType = file.name.split('.').pop().toLowerCase();
+    
+    try {
+        let text = '';
+        
+        if (fileType === 'txt') {
+            text = await readTextFile(file);
+        } else if (fileType === 'pdf') {
+            text = await readPDFFile(file);
+        } else if (fileType === 'docx' || fileType === 'doc') {
+            text = await readDocxFile(file);
+        } else {
+            alert('Unsupported file type. Please upload TXT, PDF, or DOCX files.');
+            return;
+        }
+        
+        // Set the description
+        document.getElementById('description').value = text;
+        
+        // Show file info
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileInfo').style.display = 'block';
+        
+        // Update validation
+        updateAwaitingInput();
+        
+    } catch (error) {
+        console.error('File reading error:', error);
+        alert('Failed to read file. Please try again or use a different file.');
+    }
+}
+
+// Read text file
+function readTextFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsText(file);
+    });
+}
+
+// Read PDF file
+async function readPDFFile(file) {
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        
+        // Show progress for large PDFs
+        const totalPages = pdf.numPages;
+        for (let i = 1; i <= totalPages; i++) {
+            // Update UI with progress
+            updateFileProgress(i, totalPages);
+            
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n';
+        }
+        
+        return fullText;
+    } catch (error) {
+        throw new Error('Failed to read PDF file');
+    }
+}
+
+// Read DOCX file
+async function readDocxFile(file) {
+    try {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        return result.value;
+    } catch (error) {
+        throw new Error('Failed to read DOCX file');
+    }
+}
+
+// Clear file
+function clearFile() {
+    document.getElementById('fileInput').value = '';
+    document.getElementById('fileInfo').style.display = 'none';
+    document.getElementById('fileName').textContent = '';
+}
+
+// Drag and drop handlers
+const dropZone = document.getElementById('dropZone');
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragging');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('dragging');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragging');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        document.getElementById('fileInput').files = files;
+        handleFileUpload({ target: { files: [files[0]] } });
+    }
+});
 
         // Factor context for AI understanding
         const factorContext = {
@@ -1205,6 +1444,8 @@ Base your ratings on how each factor's risk level applies to this specific ${rol
         }
 
 function applyPresetScores(presetScores) {
+
+
     // Clear existing selections
     document.querySelectorAll('.risk-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -1228,6 +1469,33 @@ function applyPresetScores(presetScores) {
     }
     
     updateAwaitingInput();
+
+    // Show visual feedback
+    // const appliedCount = Object.keys(presetScores).length;
+    showNotification(`✓ AI-suggested risk-factor ratings applied`, 'success');
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        background: ${type === 'success' ? '#34c759' : '#007aff'};
+        color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 function createAssessmentPrompt() {
@@ -1430,6 +1698,12 @@ Return JSON format:
 
 
         function selectRisk(button, factor, score) {
+
+        if (![1, 3, 5].includes(score)) {
+                console.error('Invalid score:', score);
+                return;
+        }
+    
             // Remove active class from all buttons in this category
             const categoryButtons = button.parentElement.querySelectorAll('.risk-btn');
             categoryButtons.forEach(btn => btn.classList.remove('active'));
@@ -1689,15 +1963,35 @@ Return JSON format:
             //     const assessment = JSON.parse(jsonMatch[0]);
             //     updateDecisionDisplay(assessment);
                 
-            } catch (error) {
-                console.error('Assessment error:', error);
-                const outputDiv = document.getElementById('decisionOutput');
-                outputDiv.innerHTML = `
-                    <div class="decision-placeholder">
-                        <span style="color: #ff3b30;">⚠️ AI Assessment Error</span><br>
-                        Failed to get AI assessment. Please check your connection and try again.
-                    </div>
-                `;
+            } 
+            // catch (error) {
+            //     console.error('Assessment error:', error);
+            //     const outputDiv = document.getElementById('decisionOutput');
+            //     outputDiv.innerHTML = `
+            //         <div class="decision-placeholder">
+            //             <span style="color: #ff3b30;">⚠️ AI Assessment Error</span><br>
+            //             Failed to get AI assessment. Please check your connection and try again.
+            //         </div>
+            //     `;
+            catch (error) {
+        console.error('Assessment error:', error);
+        
+        // More specific error messages
+        let errorMessage = 'Failed to get AI assessment. ';
+        if (error.message.includes('429')) {
+            errorMessage += 'Rate limit reached. Please wait a moment.';
+        } else if (error.message.includes('API')) {
+            errorMessage += 'API connection issue. Please try again.';
+        } else {
+            errorMessage += 'Please check your connection and try again.';
+        }
+        
+        // Show user-friendly error
+        outputDiv.innerHTML = `
+            <div class="decision-placeholder">
+                <span style="color: #ff3b30;">⚠️ ${errorMessage}</span>
+            </div>
+        `;
             } finally {
                 // Reset button state
                 submitBtn.disabled = false;
