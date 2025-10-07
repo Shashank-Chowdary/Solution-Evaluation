@@ -870,10 +870,10 @@
 
     <script>
         
-        const GEMINI_API_KEY = 'AIzaSyD7zCT8ZAjh_ZdEkO48nzk-T6NDKLNbWcY';
+        // const GEMINI_API_KEY = 'AIzaSyD7zCT8ZAjh_ZdEkO48nzk-T6NDKLNbWcY';
         // const GEMINI_API_KEY = 'AIzaSyAmT4KDfkmBunEB98q8dv5xS2mf8BJDt9g';
 
-        // const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
+        const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
         const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
         // Store factor scores
@@ -1883,8 +1883,7 @@ function updateDecisionDisplay(assessment) {
     const summaryHtml = assessment.summary && assessment.summary.trim() ? 
         `<div style="font-size: 13px; line-height: 1.7; text-align: left; margin-top: 20px; padding: 16px; background: linear-gradient(135deg, #f9f9fb 0%, #ffffff 100%); border-left: 4px solid ${config.borderColor}; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
             <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <span style="font-size: 18px; margin-right: 8px;">${config.icon}</span>
-                <strong style="font-size: 15px; color: #1d1d1f;">Decision Summary</strong>
+                <strong style="font-size: 15px; color: #1d1d1f;">Summary</strong>
             </div>
             <div style="color: #424245; font-size: 13px; line-height: 1.7;">${assessment.summary}</div>
         </div>` : '';
