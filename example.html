@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Framework -  Agentic AI Use Case Evaluation</title>
+    <title>Agentic Suitability Platform</title>
 
     <!-- PDF.js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -367,11 +367,11 @@ textarea {
             color: #1d6f32;
         }
 
-        .decision-pilot {
-            background: #fff8f0;
-            border-color: #ff9500;
-            color: #b8630a;
-        }
+.decision-pilot {
+    background: #fffef0;
+    border-color: #ffd700;
+    color: #8b7500;
+}
 
         .decision-postpone {
             background: #fff0f0;
@@ -493,8 +493,8 @@ textarea {
         }
 
         .decision-range-box .range-cautious {
-            background: #fff3e0;
-            color: #e65100;
+    background: #fffef0;
+    color: #8b7500;
         }
 
         .decision-range-box .range-not-suitable {
@@ -639,9 +639,11 @@ textarea {
 <body>
     <div class="container">
         <div class="header">
-            <h1>Framework -  Agentic AI Use Case Evaluation</h1>
+            <h1>Agentic Suitability Platform</h1>
             <p>AI-powered assessment tool that provides intelligent recommendations based on your specific use case context and risk factors.</p>
         </div>
+
+        
 
         <div class="main-content">
             <div class="left-panel">
@@ -995,9 +997,9 @@ textarea {
     <script>
         
         // const GEMINI_API_KEY = 'AIzaSyD7zCT8ZAjh_ZdEkO48nzk-T6NDKLNbWcY';
-        const GEMINI_API_KEY = 'AIzaSyAmT4KDfkmBunEB98q8dv5xS2mf8BJDt9g';
+        // const GEMINI_API_KEY = 'AIzaSyAmT4KDfkmBunEB98q8dv5xS2mf8BJDt9g';
 
-        // const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
+        const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
         const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
         // Store factor scores
@@ -1670,11 +1672,11 @@ function createAssessmentPrompt() {
     const totalScore = Math.round((businessScore * 0.4) + (technicalScore * 0.4) + (safetyScore * 0.2));
 
     let decision, title, subtitle;
-    if (totalScore >= 50) {
+    if (totalScore >= 75) {
         decision = 'suitable';
         title = 'Suitable for Autonomous AI';
         subtitle = 'Proceed to pilot, fast track if pilot succeeds';
-    } else if (totalScore >= 30) {
+    } else if (totalScore >= 50) {
         decision = 'cautious';
         title = 'Cautious Approach Recommended';
         subtitle = 'Pilot with constraints and safety measures';
@@ -2249,7 +2251,7 @@ function updateDecisionDisplay(assessment) {
         cautious: {
             icon: '⚠️',
             class: 'decision-pilot',
-            borderColor: '#ff9500'
+            borderColor: '#ffd700'
         },
         not_suitable: {
             icon: '❌',
@@ -2284,9 +2286,9 @@ function updateDecisionDisplay(assessment) {
         <div class="decision-range-box">
             <div class="range-title">Decision Framework</div>
             <div class="range-content">
-                <span class="range-category ${assessment.decision === 'suitable' ? 'range-suitable' : ''}">≥50: Suitable</span>
-                <span class="range-category ${assessment.decision === 'cautious' ? 'range-cautious' : ''}">30-49: Cautious</span>
-                <span class="range-category ${assessment.decision === 'not_suitable' ? 'range-not-suitable' : ''}">&lt;30: Not Suitable</span>
+                <span class="range-category ${assessment.decision === 'suitable' ? 'range-suitable' : ''}">≥75: Suitable</span>
+                <span class="range-category ${assessment.decision === 'cautious' ? 'range-cautious' : ''}">50-74: Cautious</span>
+                <span class="range-category ${assessment.decision === 'not_suitable' ? 'range-not-suitable' : ''}">&lt;50: Not Suitable</span>
             </div>
         </div>
     `;
@@ -2405,5 +2407,13 @@ function updateDecisionDisplay(assessment) {
             updateAwaitingInput();
         });
     </script>
+
+    <a href="https://shashank-chowdary.github.io/Agentic-AI-Suitability-Framework/Framework.html" 
+       target="_blank"
+       style="position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; background: #007aff; color: white; text-decoration: none; border-radius: 25px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,122,255,0.3); z-index: 1000; transition: all 0.3s ease;"
+       onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(0,122,255,0.4)';"
+       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,122,255,0.3)';">
+       📚 Framework Guide
+    </a>
 </body>
 </html>
