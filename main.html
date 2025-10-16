@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI Suitability - Solution</title>
+
+    <!-- PDF.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+</script>
+
+<!-- Mammoth.js for DOCX -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+<link rel="stylesheet" href="styles.css">
+
+    
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Agentic AI Suitability - Solution</h1>
+            <p>AI-powered assessment tool that provides intelligent recommendations based on your specific use case context and risk factors.</p>
+        </div>
+
+        
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="section">
+                    <h3>Use Case Information</h3>
+
+    <!-- Sample Use Cases Dropdown -->
+    <div style="margin-bottom: 15px;">
+        <label for="sampleUseCase" style="font-size: 13px; color: #86868b; font-weight: 400;">Select a sample use case:</label>
+        <select id="sampleUseCase" onchange="loadSampleUseCase()" style="padding: 10px; font-size: 13px;">
+            <option value="">-- Select a sample use case --</option>
+            <option value="appointment">Hospital Appointment Booking Agent</option>
+            <option value="fraud">Real-time Fraud Detection System</option>
+            <option value="customer">Customer Support Chatbot</option>
+            <option value="compliance">Regulatory Compliance Auditor</option>
+        </select>
+    </div>
+
+
+                    <div class="form-group">
+                        <label for="usecaseName">Use Case Name <span class="required">*</span></label>
+                        <input type="text" id="usecaseName" placeholder="Enter your use case name">
+                    </div>
+                    <!-- <div class="form-group">
+                        <label for="description">Use Case Description <span class="required">*</span></label>
+                        <textarea id="description" placeholder="Detailed description of the use case, stakeholders involved, and expected outcomes" required></textarea>
+                        <div id="descriptionError" class="error-message" style="display: none;">Description is required</div>
+                    </div>
+                </div> -->
+
+
+
+    
+
+
+
+    <div class="form-group">
+    <label for="description">Use Case Description <span class="required">*</span></label>
+    
+    <!-- Tab-like selector to switch between text and file upload -->
+    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <button type="button" id="textInputTab" class="input-method-tab active" onclick="switchInputMethod('text')">
+            Type Description
+        </button>
+        <button type="button" id="fileUploadTab" class="input-method-tab" onclick="switchInputMethod('file')">
+            Upload File
+        </button>
+    </div>
+    
+    <!-- Text Input -->
+    <div id="textInputSection">
+        <textarea id="description" placeholder="Detailed description of the use case, stakeholders involved, and expected outcomes" required></textarea>
+    </div>
+    
+    <!-- File Upload -->
+    <div id="fileUploadSection" style="display: none;">
+        <div style="border: 2px dashed #d2d2d7; border-radius: 8px; padding: 20px; text-align: center; background: #fafafa; cursor: pointer; transition: all 0.3s;"
+             id="dropZone"
+             onclick="document.getElementById('fileInput').click()">
+            <div style="font-size: 32px; margin-bottom: 10px;">📄</div>
+            <div style="font-size: 14px; color: #424245; margin-bottom: 5px;">
+                <strong>Click to upload</strong> or drag and drop
+            </div>
+            <div style="font-size: 12px; color: #86868b;">
+                Supports: TXT, PDF, DOCX (Max 5MB)
+            </div>
+            <input type="file" id="fileInput" accept=".txt,.pdf,.docx,.doc" style="display: none;" onchange="handleFileUpload(event)">
+        </div>
+        <div id="fileInfo" style="display: none; margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 6px; font-size: 13px;">
+            <strong>Uploaded:</strong> <span id="fileName"></span>
+            <button type="button" onclick="clearFile()" style="float: right; background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 12px;">✕ Remove</button>
+        </div>
+    </div>
+    
+    <div id="descriptionError" class="error-message" style="display: none;">Description is required</div>
+</div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label>Anticipated Autonomy Level</label>
+                        <select id="autonomyLevel">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium — Human-on-the-loop</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label>Does this affect our customers or regulatory compliance?</label>
+                        <select id="criticality">
+                            <option value="yes" selected>Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Preset/Manual Risk Rating Section -->
+                <div class="preset-section">
+                    <div class="preset-title">Risk Assessment Method</div>
+                    <div class="form-group">
+                        <label>Choose Assessment Method</label>
+                        <select id="assessmentMethod" onchange="handleAssessmentMethodChange()">
+                            <option value="manual" selected>Manually select risk factors</option>
+                            <option value="preset">Load role-specific preset</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="rolePresetGroup" style="display: none;">
+                        <label>Select Role-Specific Preset</label>
+                        <select id="rolePreset" onchange="handleRolePresetChange()">
+                            <option value="">Select a role...</option>
+                            <option value="finance">Finance (Regulatory/compliance-heavy)</option>
+                            <option value="operations">Operations (Real-time control/process automation)</option>
+                            <option value="security">Security (Access control/sensitive data)</option>
+                            <option value="customer-service">Customer Service / Support (High human touch)</option>
+                        </select>
+                    </div>
+
+                    <div id="presetLoading" class="preset-loading" style="display: none;">
+                        <h4><span class="loading"></span>AI is analyzing your use case and applying role-specific risk ratings...</h4>
+                    </div>
+                </div>
+
+                <!-- Business Value Category -->
+                <div class="category-section business-value">
+                    <div class="category-title">Business Value</div>
+                    <div class="category-weight">Weight: 40% of total score</div>
+                    <div class="risk-factors">
+                        <div class="factor-group" data-factor="cost" data-category="business">
+                            <div class="factor-title">Cost</div>
+                            <div class="factor-subtitle">Operational costs (LLM API calls), system resource costs (IT infrastructure), and human resource costs (employee salaries and labor)</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'cost', 1)">Low (5)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'cost', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'cost', 5)">High (1)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="time-efficiency" data-category="business">
+                            <div class="factor-title">Time Efficiency</div>
+                            <div class="factor-subtitle">Cycle time reduction, throughput increase, and latency reduction for customer-facing tasks</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'time-efficiency', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'time-efficiency', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'time-efficiency', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="accuracy-quality" data-category="business">
+                            <div class="factor-title">Accuracy & Quality</div>
+                            <div class="factor-subtitle">Error rate reduction, compliance & audit success, and consistency in standardized task execution</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'accuracy-quality', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'accuracy-quality', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'accuracy-quality', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="productivity-scalability" data-category="business">
+                            <div class="factor-title">Productivity & Scalability</div>
+                            <div class="factor-subtitle">Employee productivity improvements, scalability for larger volumes, and automation coverage percentage</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'productivity-scalability', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'productivity-scalability', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'productivity-scalability', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="strategic-opportunity" data-category="business">
+                            <div class="factor-title">Strategic/Opportunity Impact</div>
+                            <div class="factor-subtitle">Innovation enablement for new business models, competitive advantage, and risk mitigation (financial, operational, compliance)</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'strategic-opportunity', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'strategic-opportunity', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'strategic-opportunity', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="transparency" data-category="business">
+                            <div class="factor-title">Transparency</div>
+                            <div class="factor-subtitle">Agentic AI's decisions may lack clear, traceable reasoning, posing compliance and trust risks in regulated or customer-facing contexts</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'transparency', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'transparency', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'transparency', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="human-impact" data-category="business">
+                            <div class="factor-title">Human Impact</div>
+                            <div class="factor-subtitle">AI cannot replicate empathy, and removing humans risks harming customer trust and brand reputation</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'human-impact', 1)">Low (5)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'human-impact', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'human-impact', 5)">High (1)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Fit Category -->
+                <div class="category-section technical-fit">
+                    <div class="category-title">Technical Fit</div>
+                    <div class="category-weight">Weight: 40% of total score</div>
+                    <div class="risk-factors">
+                        <div class="factor-group" data-factor="integration-complexity" data-category="technical">
+                            <div class="factor-title">Integration Complexity</div>
+                            <div class="factor-subtitle">Legacy-modern system complexity can lead to delays, higher costs, and unstable AI performance across platforms</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'integration-complexity', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'integration-complexity', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'integration-complexity', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="real-time-data" data-category="technical">
+                            <div class="factor-title">Real-time Data Requirements</div>
+                            <div class="factor-subtitle">LLM agents' latency limits can risk safety and losses in high-speed, time-critical environments</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'real-time-data', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'real-time-data', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'real-time-data', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="autonomy-goal-orientation" data-category="technical">
+                            <div class="factor-title">Autonomy & Goal-Orientation</div>
+                            <div class="factor-subtitle">From rule-bound execution to guided decisions to fully autonomous, goal-driven multi-step planning</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'autonomy-goal-orientation', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'autonomy-goal-orientation', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'autonomy-goal-orientation', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="statefulness-memory" data-category="technical">
+                            <div class="factor-title">Statefulness & Memory</div>
+                            <div class="factor-subtitle">Tasks range from stateless to context-aware to requiring memory for long-term reasoning and continuity</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'statefulness-memory', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'statefulness-memory', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'statefulness-memory', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="human-in-loop" data-category="technical">
+                            <div class="factor-title">Human-in-the-Loop Requirement</div>
+                            <div class="factor-subtitle">Autonomy ranges from full human oversight to partial checkpoints to mostly unattended operation</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'human-in-loop', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'human-in-loop', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'human-in-loop', 5)">High (5)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Safety and Governance Category -->
+                <div class="category-section safety-governance">
+                    <div class="category-title">Safety and Governance</div>
+                    <div class="category-weight">Weight: 20% of total score</div>
+                    <div class="risk-factors">
+                        <div class="factor-group" data-factor="governance-requirements" data-category="governance">
+                            <div class="factor-title">Governance Requirements</div>
+                            <div class="factor-subtitle">Without proper oversight, AI agents can act against policies, laws, or ethics unnoticed until issues arise</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'governance-requirements', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'governance-requirements', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'governance-requirements', 5)">High (5)</button>
+                            </div>
+                        </div>
+
+                        <div class="factor-group" data-factor="security-implications" data-category="governance">
+                            <div class="factor-title">Security Implications</div>
+                            <div class="factor-subtitle">Autonomous AI access to sensitive systems creates risks of exploitation and data breaches</div>
+                            <div class="risk-buttons">
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'security-implications', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'security-implications', 3)">Medium (3)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'security-implications', 5)">High (5)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="awaitingInput" class="awaiting-input">
+                    <h4>Awaiting Input</h4>
+                    <p>Complete all required fields and rate all factors to get evaluation.</p>
+                </div>
+
+                <div class="section">
+                    <h3>AI Evaluation Results</h3>
+                    <div id="decisionOutput" class="decision-output">
+                        <div class="decision-placeholder">
+                            Complete all factor ratings and click Submit to see the AI evaluation results
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="action-buttons">
+                        <button id="submitBtn" class="btn btn-primary" onclick="submitAssessment()">Get AI Evaluation</button>
+                        <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="framework-section">
+                    <h3>AI-Powered Evaluation</h3>
+                    <div class="framework-content">
+                        This tool uses Google's Gemini 2.0 Flash to provide intelligent, expert-level assessments for autonomous AI agent implementation. The AI analyzes all factor interactions, use case context, and industry best practices to deliver:
+                        <br><br>
+                        <strong>Comprehensive Scoring:</strong><br>
+                        The AI weighs factors based on your specific use case context rather than simple mathematical averages.
+                        <br><br>
+                        <strong>Expert Decision Making:</strong><br>
+                        • Suitable: Low overall risk, good fit for agentic AI<br>
+                        • Cautious: Moderate risk, suitable with safeguards<br>
+                        • Not Suitable: High risk, recommend alternatives
+                        <br><br>
+                        <strong>Intelligent Analysis:</strong><br>
+                        The AI considers factor interdependencies and provides tailored recommendations based on your specific scenario.
+                    </div>
+
+                    <div class="alternatives">
+                        <h4>Alternatives</h4>
+                        <ul>
+                            <li>Use a rules-based automation system for routine tasks and only involve a human in complex tasks.</li>
+                            <li>Use Agentic AI only as a support tool while a human leads the conversation.</li>
+                            <li>Start with supervised automation before attempting multi-system autonomy.</li>
+                            <li>Create human-led approval workflows for outbound communications and have governance frameworks are in place.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mitigations">
+                        <h4>Mitigations</h4>
+                        <ul>
+                            <li>Implement cost-governance controls — limit API calls, use budget caps.</li>
+                            <li>Set boundaries where Agentic AI escalates to a human for emotionally charged or sensitive topics.</li>
+                            <li>For mission-critical systems — store reasoning steps.</li>
+                            <li>Implement agent policy enforcement.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script src="script.js"></script>
+    <a href="http://10.9.64.13:5678/framework/Framework.html" 
+       target="_blank"
+       style="position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; background: #007aff; color: white; text-decoration: none; border-radius: 25px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,122,255,0.3); z-index: 1000; transition: all 0.3s ease;"
+       onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(0,122,255,0.4)';"
+       onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,122,255,0.3)';">
+       📚 Framework Guide
+    </a>
+</body>
+</html>
