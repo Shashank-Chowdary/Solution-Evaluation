@@ -745,5 +745,544 @@
 
 
    
+<!-- Charts Section -->
+<div class="chart-container">
+    <h3 class="chart-title">📊 Total Cost Distribution by Agent</h3>
+    <canvas id="costChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3 class="chart-title">💰 Traditional vs AI Cost Comparison</h3>
+    <canvas id="comparisonChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3 class="chart-title">🔄 Token Usage Analysis (Input vs Output)</h3>
+    <canvas id="tokenChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3 class="chart-title">💵 Cost per Token by LLM Model</h3>
+    <canvas id="tokenCostChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3 class="chart-title">📈 Cost Breakdown by Component</h3>
+    <canvas id="breakdownChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3 class="chart-title">💡 ROI Analysis: AI vs Traditional</h3>
+    <canvas id="roiChart"></canvas>
+</div>
+
+<!-- Cost Scaling Analysis Section -->
+<div class="chart-container">
+    <h3 class="chart-title">📊 Cost Scaling Analysis: Traditional vs Agentic AI</h3>
+    
+    <div style="overflow-x: auto; margin-bottom: 30px;">
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <tr>
+                    <th style="padding: 15px; text-align: center; font-size: 1.1em;">Resume Volume</th>
+                    <th style="padding: 15px; text-align: center; font-size: 1.1em;">Traditional Approach</th>
+                    <th style="padding: 15px; text-align: center; font-size: 1.1em;">Agentic AI Approach</th>
+                    <th style="padding: 15px; text-align: center; font-size: 1.1em;">Cost Savings</th>
+                    <th style="padding: 15px; text-align: center; font-size: 1.1em;">Savings %</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: #fff8e1;">
+                    <td style="padding: 15px; text-align: center; font-weight: 600; border-bottom: 1px solid #e0e0e0;">1,000 Resumes</td>
+                    <td style="padding: 15px; text-align: center; color: #f5576c; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$678</td>
+                    <td style="padding: 15px; text-align: center; color: #667eea; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$243</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 700; font-size: 1.1em; border-bottom: 1px solid #e0e0e0;">$435</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 600; border-bottom: 1px solid #e0e0e0;">64.2%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 15px; text-align: center; font-weight: 600; border-bottom: 1px solid #e0e0e0;">5,000 Resumes</td>
+                    <td style="padding: 15px; text-align: center; color: #f5576c; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$3,390</td>
+                    <td style="padding: 15px; text-align: center; color: #667eea; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$806</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 700; font-size: 1.1em; border-bottom: 1px solid #e0e0e0;">$2,584</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 600; border-bottom: 1px solid #e0e0e0;">76.2%</td>
+                </tr>
+                <tr style="background-color: #f5f5f5;">
+                    <td style="padding: 15px; text-align: center; font-weight: 600; border-bottom: 1px solid #e0e0e0;">10,000 Resumes</td>
+                    <td style="padding: 15px; text-align: center; color: #f5576c; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$6,780</td>
+                    <td style="padding: 15px; text-align: center; color: #667eea; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$1,509</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 700; font-size: 1.1em; border-bottom: 1px solid #e0e0e0;">$5,271</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 600; border-bottom: 1px solid #e0e0e0;">77.7%</td>
+                </tr>
+                <tr>
+                    <td style="padding: 15px; text-align: center; font-weight: 600; border-bottom: 1px solid #e0e0e0;">15,000 Resumes</td>
+                    <td style="padding: 15px; text-align: center; color: #f5576c; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$10,170</td>
+                    <td style="padding: 15px; text-align: center; color: #667eea; font-weight: 600; border-bottom: 1px solid #e0e0e0;">$2,213</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 700; font-size: 1.1em; border-bottom: 1px solid #e0e0e0;">$7,957</td>
+                    <td style="padding: 15px; text-align: center; color: #48bb78; font-weight: 600; border-bottom: 1px solid #e0e0e0;">78.2%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <canvas id="scalingChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <h3 class="chart-title">💰 Savings Growth by Volume</h3>
+    <canvas id="savingsChart"></canvas>
+</div>
+
+</div>
+
+
+
+<script>
+    // Cost Distribution by Agent - Bar Chart
+    const costCtx = document.getElementById('costChart').getContext('2d');
+    new Chart(costCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Resume Parser', 'Job Matching', 'Candidate Ranking', 'Shortlisting', 'Interview Scheduling', 'Communication'],
+            datasets: [{
+                label: 'Total Cost ($)',
+                data: [25.31, 32.01, 33.505, 20.93, 8.128, 123.78],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(118, 75, 162, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(245, 87, 108, 0.8)',
+                    'rgba(132, 250, 176, 0.8)',
+                    'rgba(143, 211, 244, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(102, 126, 234, 1)',
+                    'rgba(118, 75, 162, 1)',
+                    'rgba(240, 147, 251, 1)',
+                    'rgba(245, 87, 108, 1)',
+                    'rgba(132, 250, 176, 1)',
+                    'rgba(143, 211, 244, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Cost: $' + context.parsed.y.toFixed(2);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cost ($)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Traditional vs AI Cost Comparison - Grouped Bar Chart
+    const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+    new Chart(comparisonCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Resume Parser', 'Job Matching', 'Candidate Ranking', 'Shortlisting', 'Interview Scheduling', 'Communication'],
+            datasets: [{
+                label: 'Traditional Cost ($)',
+                data: [996, 1200, 672, 300, 300, 600],
+                backgroundColor: 'rgba(245, 87, 108, 0.7)',
+                borderColor: 'rgba(245, 87, 108, 1)',
+                borderWidth: 2
+            }, {
+                label: 'AI Agent Cost ($)',
+                data: [25.31, 32.01, 33.505, 20.93, 8.128, 123.78],
+                backgroundColor: 'rgba(132, 250, 176, 0.7)',
+                borderColor: 'rgba(132, 250, 176, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cost ($)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Token Usage Analysis - Grouped Bar Chart
+    const tokenCtx = document.getElementById('tokenChart').getContext('2d');
+    new Chart(tokenCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Resume Parser', 'Job Matching', 'Candidate Ranking', 'Shortlisting', 'Interview Scheduling', 'Communication'],
+            datasets: [{
+                label: 'Input Tokens (thousands)',
+                data: [750, 600, 600, 700, 200, 300],
+                backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 2
+            }, {
+                label: 'Output Tokens (thousands)',
+                data: [10, 40, 30, 50, 40, 100],
+                backgroundColor: 'rgba(240, 147, 251, 0.7)',
+                borderColor: 'rgba(240, 147, 251, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Tokens (thousands)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Cost per Token by Model - Scatter Chart (Log Scale)
+    const tokenCostCtx = document.getElementById('tokenCostChart').getContext('2d');
+    new Chart(tokenCostCtx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'GPT-4 Turbo',
+                data: [{x: 0.00001, y: 0.00003}],
+                backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                pointRadius: 12,
+                pointHoverRadius: 15
+            }, {
+                label: 'GPT-4o',
+                data: [{x: 0.00005, y: 0.000015}],
+                backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                pointRadius: 12,
+                pointHoverRadius: 15
+            }, {
+                label: 'Claude 3 Opus',
+                data: [{x: 0.000015, y: 0.000075}],
+                backgroundColor: 'rgba(240, 147, 251, 0.8)',
+                pointRadius: 12,
+                pointHoverRadius: 15
+            }, {
+                label: 'Claude 3 Sonnet',
+                data: [{x: 0.0000015, y: 0.0000045}],
+                backgroundColor: 'rgba(245, 87, 108, 0.8)',
+                pointRadius: 12,
+                pointHoverRadius: 15
+            }, {
+                label: 'GPT-3.5 Turbo',
+                data: [{x: 0.0000005, y: 0.0000015}],
+                backgroundColor: 'rgba(132, 250, 176, 0.8)',
+                pointRadius: 12,
+                pointHoverRadius: 15
+            }, {
+                label: 'Claude 3 Haiku',
+                data: [{x: 0.00000025, y: 0.00075}],
+                backgroundColor: 'rgba(143, 211, 244, 0.8)',
+                pointRadius: 12,
+                pointHoverRadius: 15
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'right'
+                }
+            },
+            scales: {
+                x: {
+                    type: 'logarithmic',
+                    title: {
+                        display: true,
+                        text: 'Input Cost per Token ($)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                y: {
+                    type: 'logarithmic',
+                    title: {
+                        display: true,
+                        text: 'Output Cost per Token ($)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Cost Breakdown by Component - Stacked Bar Chart
+    const breakdownCtx = document.getElementById('breakdownChart').getContext('2d');
+    new Chart(breakdownCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Resume Parser', 'Job Matching', 'Candidate Ranking', 'Shortlisting', 'Interview Scheduling', 'Communication'],
+            datasets: [{
+                label: 'LLM Input',
+                data: [7.5, 30, 9, 1.05, 0.1, 0.075],
+                backgroundColor: 'rgba(102, 126, 234, 0.8)'
+            }, {
+                label: 'LLM Output',
+                data: [0.3, 0.6, 2.25, 0.225, 0.06, 75],
+                backgroundColor: 'rgba(118, 75, 162, 0.8)'
+            }, {
+                label: 'Human Oversight',
+                data: [0.75, 3.6, 1.35, 0.2625, 0.01, 0.01125],
+                backgroundColor: 'rgba(240, 147, 251, 0.8)'
+            }, {
+                label: 'Infrastructure',
+                data: [2.25, 9, 2.7, 0.315, 0.03, 0.0225],
+                backgroundColor: 'rgba(245, 87, 108, 0.8)'
+            }, {
+                label: 'Development',
+                data: [1.13, 4.5, 1.35, 0.1575, 0.015, 0.01125],
+                backgroundColor: 'rgba(132, 250, 176, 0.8)'
+            }, {
+                label: 'Subscription',
+                data: [20, 15, 25, 20, 8, 15],
+                backgroundColor: 'rgba(143, 211, 244, 0.8)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true,
+                    title: {
+                        display: true,
+                        text: 'Cost ($)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // ROI Analysis - Doughnut Chart
+    const roiCtx = document.getElementById('roiChart').getContext('2d');
+    new Chart(roiCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Total AI Cost', 'Labor Savings', 'Net Benefit'],
+            datasets: [{
+                data: [243, 678, 435],
+                backgroundColor: [
+                    'rgba(245, 87, 108, 0.8)',
+                    'rgba(132, 250, 176, 0.8)',
+                    'rgba(102, 126, 234, 0.8)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'right'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': $' + context.parsed;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Cost Scaling Comparison - Line Chart
+    const scalingCtx = document.getElementById('scalingChart').getContext('2d');
+    new Chart(scalingCtx, {
+        type: 'line',
+        data: {
+            labels: ['1,000 Resumes', '5,000 Resumes', '10,000 Resumes', '15,000 Resumes'],
+            datasets: [{
+                label: 'Traditional Approach ($)',
+                data: [678, 3390, 6780, 10170],
+                backgroundColor: 'rgba(245, 87, 108, 0.2)',
+                borderColor: 'rgba(245, 87, 108, 1)',
+                borderWidth: 3,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                tension: 0.4
+            }, {
+                label: 'Agentic AI Approach ($)',
+                data: [243, 806, 1509, 2213],
+                backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 3,
+                pointRadius: 6,
+                pointHoverRadius: 8,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Total Cost ($)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Savings Growth Chart - Bar Chart
+    const savingsCtx = document.getElementById('savingsChart').getContext('2d');
+    new Chart(savingsCtx, {
+        type: 'bar',
+        data: {
+            labels: ['1,000 Resumes', '5,000 Resumes', '10,000 Resumes', '15,000 Resumes'],
+            datasets: [{
+                label: 'Cost Savings ($)',
+                data: [435, 2584, 5271, 7957],
+                backgroundColor: [
+                    'rgba(72, 187, 120, 0.8)',
+                    'rgba(72, 187, 120, 0.8)',
+                    'rgba(72, 187, 120, 0.8)',
+                    'rgba(72, 187, 120, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(72, 187, 120, 1)',
+                    'rgba(72, 187, 120, 1)',
+                    'rgba(72, 187, 120, 1)',
+                    'rgba(72, 187, 120, 1)'
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'Savings: $' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Cost Savings ($)',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
