@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Resume Screening Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-card {
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .summary-card p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .agent-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .agent-title {
+            flex: 1;
+        }
+
+        .agent-title h2 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+
+        .agent-title .llm-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
+        .cost-badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .cost-badge .amount {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .cost-badge .label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .details-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 5px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .detail-label {
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .cost-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .cost-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cost-item.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .cost-item.negative {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .cost-item.savings {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .cost-label {
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .cost-value {
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .pricing-model {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #333;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .traditional-cost {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #333;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            text-align: center;
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        @media (max-width: 768px) {
+            .agent-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cost-breakdown, .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 HR Resume Screening Dashboard</h1>
+            <p>AI-Powered Recruitment Workflow Analysis</p>
+        </div>
+
+        <div class="summary-cards">
+            <div class="card summary-card">
+                <h3>$243</h3>
+                <p>Total Agentic AI cost</p>
+            </div>
+            <div class="card summary-card">
+                <h3>1000</h3>
+                <p>Total Resumes</p>
+            </div>
+            <div class="card summary-card">
+                <h3>6</h3>
+                <p>AI Agents</p>
+            </div>
+            <div class="card summary-card">
+                <h3>$678</h3>
+                <p>Manual Screening Cost</p>
+            </div>
+            <div class="card summary-card">
+                <h3>$435</h3>
+                <p>Total Human Resource Cost Savings</p>
+            </div>
+        </div>
+
+        <div class="agent-grid">
+            <!-- Resume Parser -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-title">
+                        <h2>📄 Resume Parser</h2>
+                        <span class="llm-badge">GPT-4 Turbo</span>
+                    </div>
+                    <div class="cost-badge">
+                        <div class="amount">$25.31</div>
+                        <div class="label">Total Cost</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 15px;">Extracts structured data from resumes using advanced NLP</p>
+                
+                <div class="details-section">
+                    <div class="section-title">💰 Token Costs</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Input Cost per Token</div>
+                            <div class="detail-value">$0.00001</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Cost per Token</div>
+                            <div class="detail-value">$0.00003</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Input Tokens</div>
+                            <div class="detail-value">750,000</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Tokens</div>
+                            <div class="detail-value">10,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="section-title">📊 Cost Structure</div>
+                    <div class="cost-breakdown">
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Input</span>
+                            <span class="cost-value">$7.50</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Output</span>
+                            <span class="cost-value">$0.30</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Human Oversight (10%)</span>
+                            <span class="cost-value">$0.75</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Infrastructure (30%)</span>
+                            <span class="cost-value">$2.25</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Development (15%)</span>
+                            <span class="cost-value">$1.13</span>
+                        </div>
+                        <div class="cost-item positive">
+                            <span class="cost-label">💰 Labor Savings (80%)</span>
+                            <span class="cost-value">-$6.00</span>
+                        </div>
+                        <div class="cost-item savings">
+                            <span class="cost-label">Other Savings (10%)</span>
+                            <span class="cost-value">-$0.75</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="traditional-cost">Traditional Cost: $996.00</div>
+                <div class="pricing-model">Subscription: $20/month per agent</div>
+            </div>
+
+            <!-- Job Matching -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-title">
+                        <h2>🎯 Job Matching</h2>
+                        <span class="llm-badge">GPT-4o</span>
+                    </div>
+                    <div class="cost-badge">
+                        <div class="amount">$32.01</div>
+                        <div class="label">Total Cost</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 15px;">Compares candidate profiles against job descriptions for accurate fit</p>
+                
+                <div class="details-section">
+                    <div class="section-title">💰 Token Costs</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Input Cost per Token</div>
+                            <div class="detail-value">$0.00005</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Cost per Token</div>
+                            <div class="detail-value">$0.000015</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Input Tokens</div>
+                            <div class="detail-value">600,000</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Tokens</div>
+                            <div class="detail-value">40,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="section-title">📊 Cost Structure</div>
+                    <div class="cost-breakdown">
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Input</span>
+                            <span class="cost-value">$30.00</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Output</span>
+                            <span class="cost-value">$0.60</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Human Oversight (12%)</span>
+                            <span class="cost-value">$3.60</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Infrastructure (30%)</span>
+                            <span class="cost-value">$9.00</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Development (15%)</span>
+                            <span class="cost-value">$4.50</span>
+                        </div>
+                        <div class="cost-item positive">
+                            <span class="cost-label">💰 Labor Savings (75%)</span>
+                            <span class="cost-value">-$22.50</span>
+                        </div>
+                        <div class="cost-item savings">
+                            <span class="cost-label">Other Savings (15%)</span>
+                            <span class="cost-value">-$4.50</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="traditional-cost">Traditional Cost: $1200.00</div>
+                <div class="pricing-model">Subscription: $15/month per agent</div>
+            </div>
+
+            <!-- Candidate Ranking -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-title">
+                        <h2>⭐ Candidate Ranking Agent</h2>
+                        <span class="llm-badge">Claude 3 Opus</span>
+                    </div>
+                    <div class="cost-badge">
+                        <div class="amount">$33.505</div>
+                        <div class="label">Total Cost</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 15px;">Scores and prioritizes candidates based on relevance</p>
+                
+                <div class="details-section">
+                    <div class="section-title">💰 Token Costs</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Input Cost per Token</div>
+                            <div class="detail-value">$0.000015</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Cost per Token</div>
+                            <div class="detail-value">$0.000075</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Input Tokens</div>
+                            <div class="detail-value">600,000</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Tokens</div>
+                            <div class="detail-value">30,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="section-title">📊 Cost Structure</div>
+                    <div class="cost-breakdown">
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Input</span>
+                            <span class="cost-value">$9.00</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Output</span>
+                            <span class="cost-value">$2.25</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Human Oversight (15%)</span>
+                            <span class="cost-value">$1.35</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Infrastructure (30%)</span>
+                            <span class="cost-value">$2.70</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Development (15%)</span>
+                            <span class="cost-value">$1.35</span>
+                        </div>
+                        <div class="cost-item positive">
+                            <span class="cost-label">💰 Labor Savings (75%)</span>
+                            <span class="cost-value">-$6.75</span>
+                        </div>
+                        <div class="cost-item savings">
+                            <span class="cost-label">Other Savings (20%)</span>
+                            <span class="cost-value">-$1.80</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="traditional-cost">Traditional Cost: $672.00</div>
+                <div class="pricing-model">Subscription: $25/month per agent</div>
+            </div>
+
+            <!-- Shortlisting Agent -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-title">
+                        <h2>✅ Shortlisting Agent</h2>
+                        <span class="llm-badge">Claude 3 Sonnet</span>
+                    </div>
+                    <div class="cost-badge">
+                        <div class="amount">$20.93</div>
+                        <div class="label">Total Cost</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 15px;">Generates and shares candidate shortlists with hiring managers</p>
+                
+                <div class="details-section">
+                    <div class="section-title">💰 Token Costs</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Input Cost per Token</div>
+                            <div class="detail-value">$0.0000015</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Cost per Token</div>
+                            <div class="detail-value">$0.0000045</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Input Tokens</div>
+                            <div class="detail-value">700,000</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Tokens</div>
+                            <div class="detail-value">50,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="section-title">📊 Cost Structure</div>
+                    <div class="cost-breakdown">
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Input</span>
+                            <span class="cost-value">$1.05</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Output</span>
+                            <span class="cost-value">$0.23</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Human Oversight (25%)</span>
+                            <span class="cost-value">$0.26</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Infrastructure (30%)</span>
+                            <span class="cost-value">$0.32</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Development (15%)</span>
+                            <span class="cost-value">$0.16</span>
+                        </div>
+                        <div class="cost-item positive">
+                            <span class="cost-label">💰 Labor Savings (70%)</span>
+                            <span class="cost-value">-$0.74</span>
+                        </div>
+                        <div class="cost-item savings">
+                            <span class="cost-label">Other Savings (20%)</span>
+                            <span class="cost-value">-$0.21</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="traditional-cost">Traditional Cost: $300.00</div>
+                <div class="pricing-model">Subscription: $20/month per agent</div>
+            </div>
+
+            <!-- Interview Scheduling -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-title">
+                        <h2>📅 Interview Scheduling Agent</h2>
+                        <span class="llm-badge">GPT-3.5 Turbo</span>
+                    </div>
+                    <div class="cost-badge">
+                        <div class="amount">$8.128</div>
+                        <div class="label">Total Cost</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 15px;">Coordinates interview slots and sends calendar invites</p>
+                
+                <div class="details-section">
+                    <div class="section-title">💰 Token Costs</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Input Cost per Token</div>
+                            <div class="detail-value">$0.0000005</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Cost per Token</div>
+                            <div class="detail-value">$0.0000015</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Input Tokens</div>
+                            <div class="detail-value">200,000</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Tokens</div>
+                            <div class="detail-value">40,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="section-title">📊 Cost Structure</div>
+                    <div class="cost-breakdown">
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Input</span>
+                            <span class="cost-value">$0.10</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Output</span>
+                            <span class="cost-value">$0.06</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Human Oversight (10%)</span>
+                            <span class="cost-value">$0.01</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Infrastructure (30%)</span>
+                            <span class="cost-value">$0.03</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Development (15%)</span>
+                            <span class="cost-value">$0.02</span>
+                        </div>
+                        <div class="cost-item positive">
+                            <span class="cost-label">💰 Labor Savings (70%)</span>
+                            <span class="cost-value">-$0.07</span>
+                        </div>
+                        <div class="cost-item savings">
+                            <span class="cost-label">Other Savings (30%)</span>
+                            <span class="cost-value">-$0.03</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="traditional-cost">Traditional Cost: $300.00</div>
+                <div class="pricing-model">Subscription: $8/month per agent</div>
+            </div>
+
+            <!-- Candidate Communication -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-title">
+                        <h2>💬 Candidate Communication Agent</h2>
+                        <span class="llm-badge">Claude 3 Haiku</span>
+                    </div>
+                    <div class="cost-badge">
+                        <div class="amount">$123.78</div>
+                        <div class="label">Total Cost</div>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 15px;">Handles FAQs and provides real-time status updates</p>
+                
+                <div class="details-section">
+                    <div class="section-title">💰 Token Costs</div>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Input Cost per Token</div>
+                            <div class="detail-value">$0.00000025</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Cost per Token</div>
+                            <div class="detail-value">$0.00075</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Input Tokens</div>
+                            <div class="detail-value">300,000</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Output Tokens</div>
+                            <div class="detail-value">100,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section">
+                    <div class="section-title">📊 Cost Structure</div>
+                    <div class="cost-breakdown">
+                        <div class="cost-item">
+                            <span class="cost-label">LLM API Input</span>
+                            <span class="cost-value">$0.08</span>
+                        </div>
+                        <div class="cost-item negative">
+                            <span class="cost-label">⚠️ LLM API Output</span>
+                            <span class="cost-value">$75.00</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Human Oversight (15%)</span>
+                            <span class="cost-value">$0.01</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Infrastructure (30%)</span>
+                            <span class="cost-value">$0.02</span>
+                        </div>
+                        <div class="cost-item">
+                            <span class="cost-label">Development (15%)</span>
+                            <span class="cost-value">$0.01</span>
+                        </div>
+                        <div class="cost-item positive">
+                            <span class="cost-label">💰 Labor Savings (70%)</span>
+                            <span class="cost-value">-$0.05</span>
+                        </div>
+                        <div class="cost-item savings">
+                            <span class="cost-label">Other Savings (30%)</span>
+                            <span class="cost-value">-$0.02</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="traditional-cost">Traditional Cost: $600.00</div>
+                <div class="pricing-model">Subscription: $15/month per agent</div>
+            </div>
+        </div>
+
+
+
+   
+</body>
+</html>
