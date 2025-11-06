@@ -844,7 +844,7 @@ textarea {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  
 
                 <!-- Technical Fit Category -->
                 <div class="category-section technical-fit">
@@ -855,9 +855,9 @@ textarea {
                             <div class="factor-title">Integration Complexity</div>
                             <div class="factor-subtitle">Legacy-modern system complexity can lead to delays, higher costs, and unstable AI performance across platforms</div>
                             <div class="risk-buttons">
-                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'integration-complexity', 1)">Low (1)</button>
+                                <button type="button" class="risk-btn score-1" onclick="selectRisk(this, 'integration-complexity', 1)">Low (5)</button>
                                 <button type="button" class="risk-btn score-3" onclick="selectRisk(this, 'integration-complexity', 3)">Medium (3)</button>
-                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'integration-complexity', 5)">High (5)</button>
+                                <button type="button" class="risk-btn score-5" onclick="selectRisk(this, 'integration-complexity', 5)">High (1)</button>
                             </div>
                         </div>
 
@@ -997,9 +997,11 @@ textarea {
     <script>
         
         // const GEMINI_API_KEY = 'AIzaSyD7zCT8ZAjh_ZdEkO48nzk-T6NDKLNbWcY';
-        // const GEMINI_API_KEY = 'AIzaSyAmT4KDfkmBunEB98q8dv5xS2mf8BJDt9g';
+        const GEMINI_API_KEY = 'AIzaSyAmT4KDfkmBunEB98q8dv5xS2mf8BJDt9g';
 
-        const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
+        // const GEMINI_API_KEY = 'AIzaSyCVKWx7m-IpEpeViPKgclViRdDxaSrq2LI';
+        // const GEMINI_API_KEY = 'AIzaSyCIyX7r4GDH_-ovSY3G2LaUWVPrJ0vEKiA';
+        
         const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
         // Store factor scores
@@ -1011,17 +1013,7 @@ textarea {
 const sampleUseCases = {
     appointment: {
         name: "Hospital Appointment Booking Agent",
-        description: `An autonomous AI agent that handles patient appointment scheduling for a hospital network. The agent can:
-- Access real-time availability across multiple departments and facilities
-- Understand patient medical history and insurance coverage
-- Schedule, reschedule, and cancel appointments
-- Send automated reminders via SMS and email
-- Handle emergency prioritization and waitlist management
-- Coordinate with doctors' schedules and operating room availability
-- Process insurance pre-authorization requests
-
-Stakeholders: Patients, doctors, administrative staff, insurance providers
-Expected Outcomes: Reduce scheduling time by 70%, improve appointment utilization by 40%, decrease no-shows by 50%`
+        description: `The scheduling AI agent must integrate real-time hospital network resources to optimize patient appointment booking, reduce no-shows, and streamline administrative.`
     },
     fraud: {
         name: "Real-time Fraud Detection System",
@@ -1248,92 +1240,108 @@ dropZone.addEventListener('drop', (e) => {
 });
 
         // Factor context for AI understanding
-        const factorContext = {
-            'cost': {
-                description: 'Operational costs (LLM API calls), system resource costs (IT infrastructure), and human resource costs',
-                risk: 'Agentic AI can create runaway operational costs if decision-making is continuous, high-frequency, or data-intensive',
-                alternative: 'Use a rules-based automation system for routine tasks and only involve a human in complex negotiations',
-                mitigation: 'Implement cost-governance controls — limit API calls, use budget caps, and introduce checkpoints'
-            },
-            'time-efficiency': {
-                description: 'Cycle time reduction, throughput increase, and latency reduction for customer-facing tasks',
-                risk: 'Over-reliance on an autonomous agent for speed can backfire, causing significant delays if the agent cannot handle edge cases',
-                alternative: 'Use AI as a decision-support tool that suggests optimal solutions to a human who makes the final call',
-                mitigation: 'Design the agent with clear timeout protocols and automatic escalation to a human operator'
-            },
-            'accuracy-quality': {
-                description: 'Error rate reduction, compliance & audit success, and consistency in standardized task execution',
-                risk: 'Errors in autonomous decision-making can lead to significant financial loss, compliance violations, and reduction in service quality',
-                alternative: 'Use specialized AI for data extraction, but have a human verify accuracy before approval',
-                mitigation: 'Implement a tiered-review system where agent handles low-value tasks but flags complex cases for human review'
-            },
-            'productivity-scalability': {
-                description: 'Employee productivity improvements, scalability for larger volumes, and automation coverage percentage',
-                risk: 'Focusing solely on scaling tasks can lead to a drop in quality, harming business metrics and requiring human effort to fix damage',
-                alternative: 'Use template-based automation for large-scale tasks and reserve AI for analyzing responses',
-                mitigation: 'Use the agent to draft and prepare tasks, but require human approval before execution'
-            },
-            'strategic-opportunity': {
-                description: 'Innovation enablement for new business models, competitive advantage, and risk mitigation',
-                risk: 'Entrusting high-stakes strategic decisions to an autonomous agent can lead to costly errors based on flawed data',
-                alternative: 'Use AI for data gathering and analysis, but have human experts conduct final strategic review',
-                mitigation: 'Require the AI to cite sources and provide confidence scores, with mandatory human approval for high-risk actions'
-            },
-            'transparency': {
-                description: 'Need for explainable AI decisions in regulated or customer-facing contexts',
-                risk: 'LLM-based decisions can be hard to explain, making it impossible to justify actions to regulators or customers',
-                alternative: 'Use structured scoring systems with transparent criteria',
-                mitigation: 'Add decision logging and explanation layers — store reasoning steps and generate human-readable justifications'
-            },
-            'human-impact': {
-                description: 'Impact on human roles and customer relationships, empathy requirements',
-                risk: 'AI cannot replicate empathy, and removing humans risks harming customer trust and brand reputation',
-                alternative: 'Use AI only as a support tool while a human leads the conversation and manages the relationship',
-                mitigation: 'Set boundaries where AI escalates to a human for emotionally charged or sensitive topics'
-            },
-            'integration-complexity': {
-                description: 'System integration challenges with legacy and modern systems',
-                risk: 'Integration complexity can cause delays, data mismatches, and extra maintenance costs',
-                alternative: 'Start with point-specific automation before attempting multi-system autonomy',
-                mitigation: 'Adopt modular integration through APIs or middleware that can be swapped without touching all legacy systems'
-            },
-            'real-time-data': {
-                description: 'Real-time processing requirements and latency sensitivity',
-                risk: 'LLM decision latency may be unsuitable for millisecond-level or safety-critical operations',
-                alternative: 'Use real-time control systems optimized for low latency and deterministic performance',
-                mitigation: 'Restrict the AI to offline analysis and process optimization rather than direct, real-time control'
-            },
-            'autonomy-goal-orientation': {
-                description: 'Level of autonomous decision-making needed, from rule-bound to goal-driven planning',
-                risk: 'Poorly defined or overly broad goals can lead an agent to take actions that are technically correct but strategically harmful',
-                alternative: 'Use rule-based systems for simple tasks and have humans set strategy for complex goals',
-                mitigation: 'Define goals with specific guardrail metrics and implement real-time monitoring'
-            },
-            'statefulness-memory': {
-                description: 'Memory and context requirements for long-term reasoning and continuity',
-                risk: 'Lack of effective long-term memory can make agents incapable of handling processes requiring previous context',
-                alternative: 'Use structured systems where context is explicitly logged by a human at each step',
-                mitigation: 'Integrate the agent with a dedicated memory system like a vector database to store and retrieve context'
-            },
-            'human-in-loop': {
-                description: 'Human oversight requirements, from full oversight to minimal checkpoints',
-                risk: 'Insufficient human oversight can lead to autonomous actions that violate policies or cause damage',
-                alternative: 'Maintain human approval workflows for all external or high-impact actions',
-                mitigation: 'Implement checkpoints where humans must approve actions exceeding certain risk thresholds'
-            },
-            'governance-requirements': {
-                description: 'Regulatory and policy compliance needs, oversight requirements',
-                risk: 'Without governance, AI agents can violate policies, laws, or ethics, damaging brand and legal standing',
-                alternative: 'Create human-led approval workflows until governance frameworks are in place',
-                mitigation: 'Implement agent policy enforcement with rules, monitoring dashboards, and human checkpoints'
-            },
-            'security-implications': {
-                description: 'Data security and access control risks from autonomous AI access',
-                risk: 'Autonomous agents can be exploited if attackers trick them into unsafe actions',
-                alternative: 'Keep critical security processes manual or semi-automated with multi-factor human verification',
-                mitigation: 'Enforce strict role-based access control, sandbox the agent, and add anomaly detection'
-            }
-        };
+
+const factorContext = {
+    'cost': {
+        description: 'Evaluates total operational expenditure — including LLM API usage, infrastructure runtime, and human effort for supervision or correction. Consider the frequency, duration, and complexity of agentic operations when estimating cost.',
+        risk: 'Continuous or high-frequency autonomous reasoning loops can cause runaway API usage or infrastructure costs that exceed manual process expenses.',
+        alternative: 'For repetitive workflows, use deterministic rules-based automation and only involve humans for complex or high-stakes decisions.',
+        mitigation: 'Set usage budgets, enforce API call quotas, and introduce cost-based throttling mechanisms.',
+        example: 'A customer-support agent keeps polling APIs for ticket updates every second, generating large monthly API bills.'
+    },
+    'time-efficiency': {
+        description: 'Measures how much the AI reduces cycle time, improves throughput, or minimizes task latency. Key consideration: speed gains vs reliability trade-offs.',
+        risk: 'Over-optimizing for speed can create system bottlenecks if the agent mismanages parallel tasks or fails in edge cases.',
+        alternative: 'Use the AI as a co-pilot that suggests or drafts outputs quickly but lets a human finalize and approve them.',
+        mitigation: 'Implement timeout and fallback protocols with automatic escalation to human operators when latency exceeds limits.',
+        example: 'An onboarding bot automates customer verification but stalls when an uncommon document format appears, delaying completion.'
+    },
+    'accuracy-quality': {
+        description: 'Assesses how consistently and correctly the AI performs tasks, maintains compliance, and meets quality benchmarks.',
+        risk: 'LLM hallucinations or misinterpretations can lead to factual errors, audit failures, or regulatory non-compliance.',
+        alternative: 'Deploy specialized narrow AI for critical accuracy tasks and insert human verification for outputs that affect compliance or finances.',
+        mitigation: 'Adopt tiered review systems — AI handles low-value or repetitive tasks while humans verify high-risk results.',
+        example: 'An invoice classifier incorrectly tags tax codes, leading to audit mismatches and manual correction overhead.'
+    },
+    'productivity-scalability': {
+        description: 'Measures the AI’s ability to scale task automation, improve employee productivity, and sustain performance under higher loads.',
+        risk: 'Blindly scaling automation may reduce output quality and create rework, negating productivity gains.',
+        alternative: 'Automate repetitive tasks first, keeping human supervision for quality assurance or customer interaction layers.',
+        mitigation: 'Implement feedback loops to expand automation coverage gradually as reliability improves.',
+        example: 'A helpdesk AI successfully handles password resets but fails at nuanced troubleshooting, overwhelming escalation teams.'
+    },
+    'strategic-opportunity': {
+        description: 'Captures whether AI contributes to innovation, competitive advantage, or long-term strategic positioning.',
+        risk: 'Delegating strategic decisions to autonomous systems can create misalignment with corporate goals or brand values.',
+        alternative: 'Let AI surface insights and recommendations while humans handle strategic interpretation and approval.',
+        mitigation: 'Require the AI to produce confidence scores, cite sources, and get human review for strategic decisions.',
+        example: 'A marketing AI autonomously discounts premium products, improving short-term sales but damaging brand value.'
+    },
+    'transparency': {
+        description: 'Evaluates how explainable, traceable, and auditable the AI’s reasoning and outputs are — critical for compliance and trust.',
+        risk: 'Opaque LLM reasoning makes it impossible to justify decisions to regulators or customers.',
+        alternative: 'Favor structured decision models or rule-based scoring systems for regulated contexts.',
+        mitigation: 'Store intermediate reasoning traces, enable human-readable explanations, and maintain decision logs.',
+        example: 'A loan approval bot rejects applicants without rationale, violating transparency rules.'
+    },
+    'human-impact': {
+        description: 'Assesses emotional, social, and role-based implications of AI replacing or assisting human workers. Focus on empathy and user trust.',
+        risk: 'AI cannot replicate empathy or human nuance, leading to poor experiences in emotionally charged or sensitive interactions.',
+        alternative: 'Use AI as an assistant while keeping humans in the lead for relationship or empathy-driven scenarios.',
+        mitigation: 'Define escalation triggers for human intervention when emotional sensitivity or judgment is required.',
+        example: 'A grief-support chatbot attempts to comfort bereaved users but ends up sounding robotic and insensitive.'
+    },
+    'integration-complexity': {
+        description: 'Analyzes the difficulty of integrating the AI agent with existing systems — especially legacy platforms with weak APIs.',
+        risk: 'Complex or fragile integrations increase delays, maintenance costs, and system instability.',
+        alternative: 'Start with small-scale integrations or isolated modules before connecting multiple systems.',
+        mitigation: 'Use modular APIs, adapters, or middleware layers that allow swapping components without full rework.',
+        example: 'A logistics agent must pull data from 10 legacy systems, causing frequent sync failures and inconsistent tracking.'
+    },
+    'real-time-data': {
+        description: 'Evaluates latency sensitivity and real-time processing needs. Determines whether AI response speed is suitable for the use case.',
+        risk: 'LLM-based agents typically have high inference latency, unsuitable for millisecond-level control or mission-critical safety loops.',
+        alternative: 'Use deterministic, low-latency control systems (e.g., PLCs) for real-time operations and apply LLMs for analysis or recommendations.',
+        mitigation: 'Restrict AI use to offline optimization, reporting, or predictive modeling rather than direct real-time control.',
+        example: 'An AI tries to control a robotic arm directly but fails due to 300ms response lag, causing production slowdowns.'
+    },
+    'autonomy-goal-orientation': {
+        description: 'Measures how independently the AI can plan and act toward defined goals. Ensures goals are measurable and bounded to prevent misaligned behavior.',
+        risk: 'Poorly scoped goals can cause technically correct but strategically harmful decisions.',
+        alternative: 'Use rule-based systems for predictable tasks and reserve goal-driven autonomy for bounded, well-defined objectives.',
+        mitigation: 'Define guardrail metrics, validate outputs continuously, and enable human overrides when deviation occurs.',
+        example: 'A sales agent focuses solely on maximizing conversions and spams customers, damaging long-term reputation.'
+    },
+    'statefulness-memory': {
+        description: 'Assesses whether the AI can maintain and recall context across sessions or interactions to ensure continuity and personalization.',
+        risk: 'Stateless agents forget past context, causing fragmented experiences and repetitive user interactions.',
+        alternative: 'Log contextual metadata manually or use structured systems for explicit state tracking.',
+        mitigation: 'Integrate the agent with persistent memory (vector DB or key-value store) to retrieve relevant context for each task.',
+        example: 'A support AI forgets prior conversations, forcing customers to repeat issues every time they reconnect.'
+    },
+    'human-in-loop': {
+        description: 'Defines the degree of human oversight and intervention in AI decision-making. Ensures accountability for critical or external actions.',
+        risk: 'Lack of human checkpoints allows autonomous agents to make unverified or non-compliant decisions.',
+        alternative: 'Retain human approval steps for high-risk actions or external communications.',
+        mitigation: 'Introduce checkpoint systems requiring human validation above certain confidence or risk thresholds.',
+        example: 'An expense-approval agent sends reimbursements without human review, leading to policy violations.'
+    },
+    'governance-requirements': {
+        description: 'Addresses regulatory compliance, internal policy enforcement, and oversight needed to ensure ethical and lawful operation.',
+        risk: 'Without governance, AI can violate laws or ethical standards, leading to reputational and legal risks.',
+        alternative: 'Adopt manual approval workflows until a clear governance and audit policy is established.',
+        mitigation: 'Create policy-enforcement dashboards and automated rule-based approval gates with human sign-offs for edge cases.',
+        example: 'A marketing agent sends unauthorized promotional emails, breaching data privacy regulations.'
+    },
+    'security-implications': {
+        description: 'Examines data protection, access control, and security vulnerabilities arising from autonomous system behavior.',
+        risk: 'Prompt injection or external manipulation may lead the agent to leak or misuse sensitive data.',
+        alternative: 'Keep sensitive operations human-controlled or require multi-factor authentication for critical steps.',
+        mitigation: 'Enforce strict role-based access, sandbox AI capabilities, and monitor for anomaly patterns in requests.',
+        example: 'An autonomous report generator accidentally exposes internal credentials when copying configuration logs.'
+    }
+};
+
 
 
        async function callGeminiAPI(prompt, retries = 2) {
@@ -1538,8 +1546,12 @@ dropZone.addEventListener('drop', (e) => {
                 `${factor}: ${context.description} | Risk: ${context.risk}`
             ).join('\n');
 
+            const autonomyLevel = document.getElementById("autonomyLevel").value;
+            const criticality = document.getElementById("criticality").value;
+
             return `
-You are an expert AI consultant specializing in role-specific risk assessment for autonomous AI implementation. You understand the detailed context of each factor and their risks.
+You are an expert AI consultant specializing in role-specific risk assessment for autonomous AI implementation. 
+You deeply understand how autonomy level, customer/regulatory sensitivity, and organizational role context influence AI adoption risk across various operational factors.
 
 **Factor Context:**
 ${factorContextString}
@@ -1550,15 +1562,23 @@ ${factorContextString}
 - Name: ${useCaseName || 'Custom use case'}
 - Description: ${description}
 - Selected Role: ${rolePreset}
-- Anticipated Autonomy Level: ${autonomyLevel}
-- Mission-Critical, Customer-Facing, or Regulatory-Sensitive: ${criticality}
+- Anticipated Autonomy Level: ${autonomyLevel} 
+   → Low = AI supports or guides humans with limited independent action.
+   → Medium = AI automates decisions within bounded workflows, with periodic human oversight.
+   → High = AI operates with broad autonomy and makes independent decisions with minimal oversight.
+- Mission-Critical, Customer-Facing, or Regulatory-Sensitive: ${criticality} 
+   → Yes = The system impacts customers directly, handles regulated processes, or affects safety/compliance outcomes.
+   → No = The system operates internally or has limited external or compliance exposure.
 
-Based on this role's priorities and the specific use case, analyze each factor and provide risk ratings (1=Low, 3=Medium, 5=High) Do not use 2 and 4. Consider:
-- The role's typical priorities and constraints
-- How the use case aligns with or conflicts with these priorities
-- The specific risks each factor poses in this context
+**Assessment Task:**
+Based on this role’s priorities and the specific use case, analyze each factor and provide *risk ratings* (1 = Low, 3 = Medium, 5 = High). 
+Do not use 2 or 4. Consider:
+- The role’s typical goals, risk tolerance, and accountability.
+- How the selected autonomy level changes oversight, decision scope, and control risk.
+- How customer/regulatory sensitivity amplifies or reduces the risk for each factor.
+- The potential operational or ethical consequences of AI behavior in this role’s context.
 
-Return your response as a JSON object with factor names as keys and risk scores (ONLY 1, 3, or 5) as values:
+Return your response as a JSON object with factor names as keys and risk scores (ONLY 1, 3, or 5) as values, like this:
 {
   "cost": 3,
   "time-efficiency": 5,
@@ -1566,8 +1586,8 @@ Return your response as a JSON object with factor names as keys and risk scores 
   ...
 }
 
-Base your ratings on how each factor's risk level applies to this specific ${rolePreset} use case.
-            `.trim();
+Ensure your reasoning aligns with both the role priorities and the contextual factors (autonomy level and criticality) for this specific use case.
+`.trim();
         }
 
 function applyPresetScores(presetScores) {
@@ -1642,15 +1662,21 @@ function createAssessmentPrompt() {
         let score = factorScores[factor];
         if (score === undefined) return sum;
         
-        if (factor === 'cost' || factor === 'human-impact') {
+        if (factor === 'cost' || factor === 'human-impact' ) {
             score = 6 - score;
         }
         return sum + score;
     }, 0);
 
     const technicalSum = technicalFactors.reduce((sum, factor) => {
-        const score = factorScores[factor];
-        return score !== undefined ? sum + score : sum;
+        let score = factorScores[factor];
+        if (score === undefined) return sum;
+        
+        // Reverse scoring for integration-complexity (lower is better)
+        if (factor === 'integration-complexity') {
+            score = 6 - score;
+        }
+        return sum + score;
     }, 0);
 
     const safetySum = safetyFactors.reduce((sum, factor) => {
@@ -1735,25 +1761,45 @@ Return JSON format:
         const unchangedTechnical = technicalFactors.filter(f => unchangedFactors.includes(f));
         const unchangedSafety = safetyFactors.filter(f => unchangedFactors.includes(f));
         
-        if (unchangedBusiness.length > 0) {
+if (unchangedBusiness.length > 0) {
             factorRatingsText += 'Business Value (AI-suggested, unchanged by user):\n';
             unchangedBusiness.forEach(factor => {
                 const score = factorScores[factor];
-                const level = score === 1 ? 'Low' : score === 3 ? 'Medium' : 'High';
+                let level, explanation;
+                
+                // Reverse interpretation for cost and human-impact
+                if (factor === 'cost' || factor === 'human-impact') {
+                    level = score === 1 ? 'High' : score === 3 ? 'Medium' : 'Low';
+                    explanation = score === 1 ? 'High cost/impact concern' : score === 3 ? 'Medium cost/impact' : 'Low cost/impact (beneficial)';
+                } else {
+                    level = score === 1 ? 'Low' : score === 3 ? 'Medium' : 'High';
+                    explanation = '';
+                }
+                
                 const factorName = factor.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-                factorRatingsText += `- ${factorName}: ${score} (${level})\n`;
+                factorRatingsText += `- ${factorName}: ${score} (${level}${explanation ? ' - ' + explanation : ''})\n`;
             });
         }
         
-        if (unchangedTechnical.length > 0) {
-            factorRatingsText += '\nTechnical (AI-suggested, unchanged by user):\n';
-            unchangedTechnical.forEach(factor => {
-                const score = factorScores[factor];
-                const level = score === 1 ? 'Low' : score === 3 ? 'Medium' : 'High';
-                const factorName = factor.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-                factorRatingsText += `- ${factorName}: ${score} (${level})\n`;
-            });
+if (unchangedTechnical.length > 0) {
+    factorRatingsText += '\nTechnical (AI-suggested, unchanged by user):\n';
+    unchangedTechnical.forEach(factor => {
+        const score = factorScores[factor];
+        let level, explanation;
+        
+        // Reverse interpretation for integration-complexity
+        if (factor === 'integration-complexity') {
+            level = score === 1 ? 'High' : score === 3 ? 'Medium' : 'Low';
+            explanation = score === 1 ? 'High complexity concern' : score === 3 ? 'Medium complexity' : 'Low complexity (beneficial)';
+        } else {
+            level = score === 1 ? 'Low' : score === 3 ? 'Medium' : 'High';
+            explanation = '';
         }
+        
+        const factorName = factor.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        factorRatingsText += `- ${factorName}: ${score} (${level}${explanation ? ' - ' + explanation : ''})\n`;
+    });
+}
         
         if (unchangedSafety.length > 0) {
             factorRatingsText += '\nSafety (AI-suggested, unchanged by user):\n';
@@ -2126,113 +2172,6 @@ Return JSON format:
             }
         }
 
-// function updateDecisionDisplay(assessment) {
-//     const outputDiv = document.getElementById('decisionOutput');
-    
-//     const decisionConfig = {
-//         suitable: {
-//             icon: '✅',
-//             class: 'decision-proceed'
-//         },
-//         cautious: {
-//             icon: '⚠️',
-//             class: 'decision-pilot'
-//         },
-//         not_suitable: {
-//             icon: '❌',
-//             class: 'decision-postpone'
-//         }
-//     };
-
-//     const config = decisionConfig[assessment.decision] || decisionConfig.cautious;
-
-//     // Color-code factor ratings function - MUST BE DEFINED FIRST
-//     function colorCodeFactorRatings(text) {
-//         if (!text) return text;
-        
-//         // Replace (5, High) or (High) with red color
-//         text = text.replace(/\(5,?\s*High\)/gi, '<span style="color: #ff3b30; font-weight: 600;">(5, High)</span>');
-//         text = text.replace(/\(High\)/gi, '<span style="color: #ff3b30; font-weight: 600;">(High)</span>');
-        
-//         // Replace (3, Medium) or (Medium) with orange color
-//         text = text.replace(/\(3,?\s*Medium\)/gi, '<span style="color: #ff9500; font-weight: 600;">(3, Medium)</span>');
-//         text = text.replace(/\(Medium\)/gi, '<span style="color: #ff9500; font-weight: 600;">(Medium)</span>');
-        
-//         // Replace (1, Low) or (Low) with green color
-//         text = text.replace(/\(1,?\s*Low\)/gi, '<span style="color: #34c759; font-weight: 600;">(1, Low)</span>');
-//         text = text.replace(/\(Low\)/gi, '<span style="color: #34c759; font-weight: 600;">(Low)</span>');
-        
-//         return text;
-//     }
-
-//     // Decision Range Box - appears for both manual and preset
-//     const decisionRangeHtml = `
-//         <div class="decision-range-box">
-//             <div class="range-title">Decision Framework</div>
-//             <div class="range-content">
-//                 <span class="range-category ${assessment.decision === 'suitable' ? 'range-suitable' : ''}">≥50: Suitable</span>
-//                 <span class="range-category ${assessment.decision === 'cautious' ? 'range-cautious' : ''}">30-49: Cautious</span>
-//                 <span class="range-category ${assessment.decision === 'not_suitable' ? 'range-not-suitable' : ''}">&lt;30: Not Suitable</span>
-//             </div>
-//         </div>
-//     `;
-
-//     const recommendationsHtml = assessment.keyRecommendations && assessment.keyRecommendations.length > 0 ? 
-//         `<div style="margin-top: 15px; font-size: 12px; text-align: left;">
-//             <strong>Key Recommendations:</strong>
-//             <ul style="margin: 5px 0 0 20px; list-style: disc;">
-//                 ${assessment.keyRecommendations.map(rec => `<li style="margin-bottom: 5px;">${rec}</li>`).join('')}
-//             </ul>
-//          </div>` : '';
-
-//     // Only show reasoning if it exists (preset mode) - WITH COLOR CODING
-//     const reasoningHtml = assessment.reasoning && assessment.reasoning.trim() ? 
-//         `<div style="font-size: 13px; line-height: 1.6; text-align: left; margin-top: 15px;">
-//             <strong>Expert Analysis:</strong><br>
-//             <div style="white-space: pre-line;">${colorCodeFactorRatings(assessment.reasoning)}</div>
-//         </div>` : '';
-
-//     // Add summary section - NEW
-//     const summaryHtml = assessment.summary && assessment.summary.trim() ? 
-//         `<div style="font-size: 13px; line-height: 1.6; text-align: left; margin-top: 15px; padding: 12px; background: #f9f9fb; border-left: 3px solid ${config.class === 'decision-proceed' ? '#34c759' : config.class === 'decision-pilot' ? '#ff9500' : '#ff3b30'}; border-radius: 4px;">
-//             <strong>Summary:</strong><br>
-//             <div style="margin-top: 5px;">${assessment.summary}</div>
-//         </div>` : '';
-
-//     outputDiv.innerHTML = `
-//         <div class="decision-result">
-//             <span class="decision-icon">${config.icon}</span>
-//             <div class="decision-title">${assessment.title}</div>
-//             <div class="decision-subtitle">${assessment.subtitle}</div>
-//             <div class="score-display">
-//                 <div class="score-breakdown">
-//                     <div class="score-item">
-//                         <div class="score-label">Business Value</div>
-//                         <div class="score-value">${assessment.businessScore}/100</div>
-//                     </div>
-//                     <div class="score-item">
-//                         <div class="score-label">Technical Fit</div>
-//                         <div class="score-value">${assessment.technicalScore}/100</div>
-//                     </div>
-//                     <div class="score-item">
-//                         <div class="score-label">Safety & Governance</div>
-//                         <div class="score-value">${assessment.safetyScore}/100</div>
-//                     </div>
-//                 </div>
-//                 <div class="total-score">
-//                     <div class="score-label">Total Score</div>
-//                     <div class="score-value">${assessment.totalScore}/100</div>
-//                 </div>
-//             </div>
-//             ${decisionRangeHtml}
-//             ${reasoningHtml}
-//             ${summaryHtml}
-//             ${recommendationsHtml}
-//         </div>
-//     `;
-    
-//     outputDiv.className = `decision-output ${config.class}`;
-// }
 
 
 function updateDecisionDisplay(assessment) {
@@ -2380,7 +2319,7 @@ function updateDecisionDisplay(assessment) {
             
             // Reset decision output
             const outputDiv = document.getElementById('decisionOutput');
-            outputDiv.innerHTML = '<div c   lass="decision-placeholder">Complete all factor ratings and click Submit to see the AI evaluation results</div>';
+            outputDiv.innerHTML = '<div class="decision-placeholder">Complete all factor ratings and click Submit to see the AI evaluation results</div>';
             outputDiv.className = 'decision-output';
             
             // Reset awaiting input
@@ -2408,7 +2347,7 @@ function updateDecisionDisplay(assessment) {
         });
     </script>
 
-    <a href="https://shashank-chowdary.github.io/Agentic-AI-Suitability-Framework/Framework.html" 
+    <a href="http://localhost:5501/Framework.html" 
        target="_blank"
        style="position: fixed; bottom: 20px; right: 20px; padding: 12px 20px; background: #007aff; color: white; text-decoration: none; border-radius: 25px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,122,255,0.3); z-index: 1000; transition: all 0.3s ease;"
        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(0,122,255,0.4)';"
